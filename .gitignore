@@ -1,0 +1,7 @@
+*.o
+*.swp
+*.out
+so_long
+.DS_Store
+*.dSYM
+.vscode
