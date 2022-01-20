@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 21:34:26 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/01/20 18:47:20 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/01/20 18:43:57 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,10 @@ void    *func1(void *arg)
     pthread_mutex_lock(&mutex);
     while (str[++i])
     {
-        printf("\033[93m%c\033[0m", str[i]);
+        printf("\033[93m%c\033[0m\n", str[i]);
         usleep(300);
     }
     pthread_mutex_unlock(&mutex);
-    printf("\n");
     pthread_exit(NULL);
 }
 
@@ -42,11 +41,10 @@ void    *func2(void *arg)
     pthread_mutex_lock(&mutex);
     while (str[++i])
     {
-        printf("\033[93m%c\033[0m", str[i]);
+        printf("\033[93m%c\033[0m\n", str[i]);
         usleep(300);
     }
     pthread_mutex_unlock(&mutex);
-    printf("\n");
     pthread_exit(NULL);
 }
 
