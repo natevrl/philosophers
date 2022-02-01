@@ -1,6 +1,7 @@
 #include "philo.h"
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex;
 
 static long long	atl(char *nptr)
 {
@@ -29,20 +30,30 @@ static long long	atl(char *nptr)
 void    *func1(void *arg)
 {
     int i = -1;
-    static int y = 1;
+	static int y = 0;
     char str[] = "jsuis le thread :";
+	t_root root = *(t_root*)arg;
     
-    (void)arg;
     pthread_mutex_lock(&mutex);
     while (str[++i])
     {
-        printf("\033[93m%c\033[0m", str[i]);
+		if (root.philo[y]->id == 1)
+        	printf("\033[93m%c\033[0m", str[i]);
+		else if (root.philo[y]->id == 2)
+    	    printf("\033[92m%c\033[0m", str[i]);
+		else if (root.philo[y]->id == 3)
+        	printf("\033[94m%c\033[0m", str[i]);
+		else        	
+			printf("\033[95m%c\033[0m", str[i]);
         usleep(300);
     }
-    printf(" %d\n", y++);
     pthread_mutex_unlock(&mutex);
-    // pthread_exit(NULL);
+	printf(" %d\n", root.philo[y]->id);
+	y++;
+
+    pthread_exit(NULL);
 }
+
 
 void	init(t_root *root, char **av)
 {
@@ -66,8 +77,9 @@ int main(int ac, char **av)
 {
 
 	t_root root;
-	int i = 0;
+	int i = -1;
 	int ms = 0;
+	pthread_mutex_init(&mutex, NULL);
 
 	if (ac != 5)
 	{
@@ -79,36 +91,48 @@ int main(int ac, char **av)
 
 	root.philo = malloc(sizeof(t_philo) * root.number_of_philosophers);
 	if (!root.philo)
-		return (-1);
-		root.philo->philo_thread = malloc(sizeof(pthread_t) * root.number_of_philosophers);
-	if (!root.philo->philo_thread)
-		return (-1);
-	root.philo->id = malloc(sizeof(int) * root.number_of_philosophers);
-	if (!root.philo->id)
-		return (-1);
+		return (EXIT_FAILURE);
 
-
-	while(i < root.number_of_philosophers)
+	while(++i < root.number_of_philosophers)
 	{
-		root.philo->id[i] = i;
-		// printf("%d\n", root.philo->id[i]);
-		pthread_create(&root.philo->philo_thread[i], NULL, func1, NULL);
-    	// pthread_join(root.philo->philo_thread[i], NULL);
-		// printf("%ld\n", root.philo->philo_thread[i]);
-		i++;
-	}
-	while (1)
-	{
-		printf("%d ms\n", ms);
-		if (ms == root.time_to_die)
+		root.philo[i] = malloc(sizeof(t_philo));
+		if (!root.philo)
+			return (-1);
+		root.philo[i]->id = i + 1;
+		// printf("%d\n", root.philo[i]->id);
+		if (pthread_create(&root.philo[i]->philo_thread, NULL, func1, &root) != 0)
 		{
-			print_msg(&root, "vient de mourir");
-			break;
+			printf("thread_create() error\n");
+			return (EXIT_FAILURE);
 		}
-		if (ms == 0)
-			print_msg(&root, "nait");
-		ms+=200;
+		printf("Thread %d has started\n", i + 1);
+		// similaire a wait() pour les processes, attend que le thread termine avant de continuer le programme
+
+	}
+	// on creer 2 loops car avant de terminer les threads avec join, on attends qu'ils soient tous crees
+	i = -1;
+	while(++i < root.number_of_philosophers)
+	{
+		pthread_join(root.philo[i]->philo_thread, NULL);
+		printf("Thread %d has finished\n", i + 1);
 	}
 
+	// while (1)
+	// {
+	// 	printf("\n%d ms\n", ms);
+	// 	if (ms == root.time_to_die)
+	// 	{
+	// 		print_msg(&root, "vient de mourir");
+	// 		break;
+	// 	}
+	// 	if (ms == 0)
+	// 		print_msg(&root, "nait");
+	// 	ms+=200;
+	// }
+	// printf("%ld\n", root.philo[0]->id);
+	// free(root.philo[0]);
+	// printf("%ld\n", root.philo[0]->id);
+
+	pthread_mutex_destroy(&mutex);
 	return (0);
 }
