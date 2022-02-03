@@ -27,33 +27,76 @@ static long long	atl(char *nptr)
 	return (result);
 }
 
+long long getimes()
+{
+	struct timeval start;
+	// unsigned long int micro_second;
+
+	gettimeofday(&start, NULL);
+	return (start.tv_usec);
+}
+
+void	eating(t_root *root, int philo_index)
+{
+	printf("\033[92mphilo[%d] start eating\n\033[0m", philo_index + 1);
+	usleep(root->time_to_eat);
+	root->philo[philo_index].last_eat = getimes();
+	printf("\033[92mphilo[%d] stop eating at [%ld]\n\033[0m", philo_index + 1, getimes());
+}
+
+void	sleeping(t_root *root, int philo_index)
+{
+	printf("\033[93mphilo[%d] sleep...\n\033[0m", philo_index  + 1);
+	usleep(root->time_to_sleep);
+	printf("\033[93mphilo[%d] stop sleep... [%ld]\n\033[0m",philo_index + 1, getimes());
+}
+
 void    *func1(void *arg)
 {
-    int i = -1;
-	static int y = 0;
-    char str[] = "jsuis le thread :";
-	t_root root = *(t_root*)arg;
-    
-    pthread_mutex_lock(&mutex);
-    while (str[++i])
-    {
-		if (root.philo[y]->id == 1)
-        	printf("\033[93m%c\033[0m", str[i]);
-		else if (root.philo[y]->id == 2)
-    	    printf("\033[92m%c\033[0m", str[i]);
-		else if (root.philo[y]->id == 3)
-        	printf("\033[94m%c\033[0m", str[i]);
-		else        	
-			printf("\033[95m%c\033[0m", str[i]);
-        usleep(300);
-    }
-    pthread_mutex_unlock(&mutex);
-	printf(" %d\n", root.philo[y]->id);
-	y++;
+	// static int i = 0;
+	// t_root root = *(t_root*)arg;
+	int index = *(int *)arg;
 
+    
+    // pthread_mutex_lock(&mutex);
+
+    // pthread_mutex_unlock(&mutex);
+	while (1)
+	{
+		if (getimes() >= root.start_time + root.time_to_die && root.philo[index].last_eat == 0)
+			break ;
+		else if (getimes() >= root.philo[index].last_eat + root.time_to_die && root.philo[index].last_eat != 0)
+			break;
+		printf("pense...\n");
+		eating(&root, index);
+		sleeping(&root, index);
+
+		// usleep(400);
+	}
+
+	i++;
     pthread_exit(NULL);
 }
 
+void	*func2(void *arg)
+{
+	int philo = *(int *)arg;
+	printf("philo [%d]\n", philo);
+}
+
+void	*func3(void *arg)
+{
+	t_root root = *(t_root*)arg;
+	printf("philo [%d]\n", root.philo[root.index_philo].id);
+}
+
+void	*func4(void *arg)
+{
+	static int i = 1;
+	t_root root = *(t_root*)arg;
+	printf("philo [%d]\n", i);
+	i++;
+}
 
 void	init(t_root *root, char **av)
 {
@@ -61,6 +104,7 @@ void	init(t_root *root, char **av)
 	root->time_to_die = atl(av[2]);
 	root->time_to_eat = atl(av[3]);
 	root->time_to_sleep = atl(av[4]);
+	root->index_philo = -1;
 }
 
 void print_msg(t_root *root, char *msg)
@@ -73,66 +117,67 @@ void print_msg(t_root *root, char *msg)
 	}
 }
 
+
 int main(int ac, char **av)
 {
 
-	t_root root;
-	int i = -1;
+	// t_root root;
+	// int i = -1;
 	int ms = 0;
-	pthread_mutex_init(&mutex, NULL);
+	
+	root.start_time = getimes();
+	init(&root, av);
 
+	printf("%ld\n", root.start_time);
+	printf("%ld\n", root.start_time + root.time_to_die);
+
+	pthread_mutex_init(&mutex, NULL);
 	if (ac != 5)
 	{
 		printf("needs 4 args\n");
-		return (-1);
+		return (EXIT_FAILURE);
 	}
-
-	init(&root, av);
-
 	root.philo = malloc(sizeof(t_philo) * root.number_of_philosophers);
 	if (!root.philo)
 		return (EXIT_FAILURE);
 
-	while(++i < root.number_of_philosophers)
+	while(++root.index_philo < root.number_of_philosophers)
 	{
-		root.philo[i] = malloc(sizeof(t_philo));
-		if (!root.philo)
-			return (-1);
-		root.philo[i]->id = i + 1;
-		// printf("%d\n", root.philo[i]->id);
-		if (pthread_create(&root.philo[i]->philo_thread, NULL, func1, &root) != 0)
+		root.philo[root.index_philo].id = root.index_philo + 1;
+		root.philo[root.index_philo].last_eat = 0;
+		if (pthread_create(&root.philo[root.index_philo].philo_thread, NULL, func1, (void *)&root.philo[root.index_philo].id) != 0)
 		{
 			printf("thread_create() error\n");
 			return (EXIT_FAILURE);
 		}
-		printf("Thread %d has started\n", i + 1);
-		// similaire a wait() pour les processes, attend que le thread termine avant de continuer le programme
+		printf("Philo %ld is alive at [%ld]\n", root.philo[root.index_philo].id, getimes());
 
 	}
 	// on creer 2 loops car avant de terminer les threads avec join, on attends qu'ils soient tous crees
-	i = -1;
-	while(++i < root.number_of_philosophers)
+	root.index_philo = -1;
+	while(++root.index_philo  < root.number_of_philosophers)
 	{
-		pthread_join(root.philo[i]->philo_thread, NULL);
-		printf("Thread %d has finished\n", i + 1);
+		// similaire a wait() pour les processes, attend que le thread termine avant de continuer le programme
+		pthread_join(root.philo[root.index_philo ].philo_thread, NULL);
+		printf("Philo %ld died at [%ld]\n", root.philo[root.index_philo ].id, getimes());
 	}
 
-	// while (1)
-	// {
-	// 	printf("\n%d ms\n", ms);
-	// 	if (ms == root.time_to_die)
-	// 	{
-	// 		print_msg(&root, "vient de mourir");
-	// 		break;
-	// 	}
-	// 	if (ms == 0)
-	// 		print_msg(&root, "nait");
-	// 	ms+=200;
-	// }
-	// printf("%ld\n", root.philo[0]->id);
-	// free(root.philo[0]);
-	// printf("%ld\n", root.philo[0]->id);
+	// // while (1)
+	// // {
+	// // 	printf("\n%d ms\n", ms);
+	// // 	if (ms == root.time_to_die)
+	// // 	{
+	// // 		print_msg(&root, "vient de mourir");
+	// // 		break;
+	// // 	}
+	// // 	if (ms == 0)
+	// // 		print_msg(&root, "nait");
+	// // 	ms+=200;
+	// // }
+	// // printf("%ld\n", root.philo[0]->id);
+	// // free(root.philo[0]);
+	// // printf("%ld\n", root.philo[0]->id);
 
-	pthread_mutex_destroy(&mutex);
+	// pthread_mutex_destroy(&mutex);
 	return (0);
 }
