@@ -53,23 +53,21 @@ void	sleeping(t_root *root, int philo_index)
 
 void    *func1(void *arg)
 {
-	// static int i = 0;
-	// t_root root = *(t_root*)arg;
-	int index = *(int *)arg;
-
+	static int i = 0;
+	t_root root = *(t_root*)arg;
     
     // pthread_mutex_lock(&mutex);
 
     // pthread_mutex_unlock(&mutex);
 	while (1)
 	{
-		if (getimes() >= root.start_time + root.time_to_die && root.philo[index].last_eat == 0)
+		if (getimes() >= root.start_time + root.time_to_die && root.philo[i].last_eat == 0)
 			break ;
-		else if (getimes() >= root.philo[index].last_eat + root.time_to_die && root.philo[index].last_eat != 0)
+		else if (getimes() >= root.philo[i].last_eat + root.time_to_die && root.philo[i].last_eat != 0)
 			break;
 		printf("pense...\n");
-		eating(&root, index);
-		sleeping(&root, index);
+		eating(&root, i);
+		sleeping(&root, i);
 
 		// usleep(400);
 	}
@@ -81,22 +79,9 @@ void    *func1(void *arg)
 void	*func2(void *arg)
 {
 	int philo = *(int *)arg;
-	printf("philo [%d]\n", philo);
+	printf("philo [%d]", philo);
 }
 
-void	*func3(void *arg)
-{
-	t_root root = *(t_root*)arg;
-	printf("philo [%d]\n", root.philo[root.index_philo].id);
-}
-
-void	*func4(void *arg)
-{
-	static int i = 1;
-	t_root root = *(t_root*)arg;
-	printf("philo [%d]\n", i);
-	i++;
-}
 
 void	init(t_root *root, char **av)
 {
@@ -104,7 +89,6 @@ void	init(t_root *root, char **av)
 	root->time_to_die = atl(av[2]);
 	root->time_to_eat = atl(av[3]);
 	root->time_to_sleep = atl(av[4]);
-	root->index_philo = -1;
 }
 
 void print_msg(t_root *root, char *msg)
@@ -121,8 +105,8 @@ void print_msg(t_root *root, char *msg)
 int main(int ac, char **av)
 {
 
-	// t_root root;
-	// int i = -1;
+	t_root root;
+	int i = -1;
 	int ms = 0;
 	
 	root.start_time = getimes();
@@ -141,25 +125,25 @@ int main(int ac, char **av)
 	if (!root.philo)
 		return (EXIT_FAILURE);
 
-	while(++root.index_philo < root.number_of_philosophers)
+	while(++i < root.number_of_philosophers)
 	{
-		root.philo[root.index_philo].id = root.index_philo + 1;
-		root.philo[root.index_philo].last_eat = 0;
-		if (pthread_create(&root.philo[root.index_philo].philo_thread, NULL, func1, (void *)&root.philo[root.index_philo].id) != 0)
+		root.philo[i].id = i + 1;
+		root.philo[i].last_eat = 0;
+		if (pthread_create(&root.philo[i].philo_thread, NULL, func1, &root) != 0)
 		{
 			printf("thread_create() error\n");
 			return (EXIT_FAILURE);
 		}
-		printf("Philo %ld is alive at [%ld]\n", root.philo[root.index_philo].id, getimes());
+		printf("Philo %ld is alive at [%ld]\n", root.philo[i].id, getimes());
 
 	}
 	// on creer 2 loops car avant de terminer les threads avec join, on attends qu'ils soient tous crees
-	root.index_philo = -1;
-	while(++root.index_philo  < root.number_of_philosophers)
+	i = -1;
+	while(++i < root.number_of_philosophers)
 	{
 		// similaire a wait() pour les processes, attend que le thread termine avant de continuer le programme
-		pthread_join(root.philo[root.index_philo ].philo_thread, NULL);
-		printf("Philo %ld died at [%ld]\n", root.philo[root.index_philo ].id, getimes());
+		pthread_join(root.philo[i].philo_thread, NULL);
+		printf("Philo %ld died at [%ld]\n", root.philo[i].id, getimes());
 	}
 
 	// // while (1)

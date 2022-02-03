@@ -25,4 +25,4 @@ typedef struct s_root
 	t_philo	*philo;
 } t_root;
 
-t_root root;
+// t_root root;
