@@ -4,16 +4,18 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+// typedef struct s_root;
 
 typedef struct s_philo
 {
 	int id;
 	long long last_eat;
 	pthread_t philo_thread;
+	struct s_data *data;
 
 } t_philo;
 
-typedef struct s_root
+typedef struct s_data
 {
 	int number_of_philosophers;
 	long long start_time;
@@ -21,8 +23,6 @@ typedef struct s_root
 	int time_to_eat;
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
-	int index_philo;
-	t_philo	*philo;
-} t_root;
+} t_data;
 
 // t_root root;
