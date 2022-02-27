@@ -10,6 +10,7 @@ typedef struct s_philo
 {
 	int id;
 	long long last_eat;
+	long long born_time;
 	pthread_t philo_thread;
 	struct s_data *data;
 
@@ -18,11 +19,11 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int number_of_philosophers;
-	long long start_time;
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
+	int start_of_program;
 } t_data;
 
 // t_root root;

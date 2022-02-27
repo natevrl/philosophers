@@ -1,13 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/27 17:42:13 by ubuntu            #+#    #+#             */
+/*   Updated: 2022/02/27 22:34:17 by ubuntu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+
 
 // pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex;
 
-static long long	atl(char *nptr)
+static long long atl(char *nptr)
 {
-	int			i;
-	int			negatif;
-	long long	result;
+	int i;
+	int negatif;
+	long long result;
 
 	i = 0;
 	result = 0;
@@ -27,82 +40,65 @@ static long long	atl(char *nptr)
 	return (result);
 }
 
-long long getimes()
+long long	getimes(void)
 {
-	struct timeval start;
-	// unsigned long int micro_second;
+	struct timeval	t;
 
-	gettimeofday(&start, NULL);
-	return (start.tv_usec);
+	gettimeofday(&t, NULL);
+	return ((t.tv_sec * 10000) + (t.tv_usec / 10000));
 }
 
-// void	eating(t_data *data, int philo_index)
-// {
-// 	printf("\033[92mphilo[%d] start eating\n\033[0m", philo_index + 1);
-// 	usleep(data->time_to_eat);
-// 	data->philo[philo_index].last_eat = getimes();
-// 	printf("\033[92mphilo[%d] stop eating at [%lld]\n\033[0m", philo_index + 1, getimes());
-// }
-
-// void	sleeping(t_data *data, int philo_index)
-// {
-// 	printf("\033[93mphilo[%d] sleep...\n\033[0m", philo_index  + 1);
-// 	usleep(data->time_to_sleep);
-// 	printf("\033[93mphilo[%d] stop sleep... [%lld]\n\033[0m",philo_index + 1, getimes());
-// }
-
-void    *func1(void *arg)
+void	eating(t_philo *philo)
 {
-	// static int i = 0;
+	long long before_eating;
+	// pthread_mutex_lock(&mutex);
+	before_eating = getimes();
+	printf("\033[92mphilo[%d] start eating at [%lli]\n\033[0m", philo->id, before_eating - philo->born_time);
+	usleep(philo->data->time_to_eat);
+	philo->last_eat = getimes();
+	printf("\033[92mphilo[%d] stop eating at [%lli]\n\033[0m", philo->id, philo->last_eat - philo->born_time);
+	// pthread_mutex_unlock(&mutex);
+
+}
+
+void	sleeping(t_philo *philo)
+{
+	printf("\033[93mphilo[%d] sleep...\n\033[0m", philo->id);
+	usleep(philo->data->time_to_sleep);
+	printf("\033[93mphilo[%d] stop sleep... [%lli]\n\033[0m", philo->id, getimes() - philo->born_time);
+}
+
+void *func1(void *arg)
+{
 	t_philo *philo = (t_philo *)arg;
 	
-	// philo->data->time_to_die;
-	printf("TTTT= %lld\n", philo->data->start_time);
-	exit(0);
-    // pthread_mutex_lock(&mutex);
-	
-    // pthread_mutex_unlock(&mutex);
-	printf("----CA RENTRE----\n");
+	// pthread_mutex_lock(&mutex);
+	// pthread_mutex_unlock(&mutex);
 	while (1)
 	{
-		if (getimes() >= (*philo).data->start_time + (*philo).data->time_to_die && (*philo).last_eat == 0)
-			break ;
-		else if (getimes() >=  (*philo).last_eat + (*philo).data->time_to_die && (*philo).last_eat != 0)
+		if (getimes() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0)
+		{
+
+			printf("----CA RENTRE----\n");
 			break;
-
-		printf("pense...\n");
-		// eating((*philo).data, (*philo).id);
-		// sleeping((*philo).data, (*philo).id);
-
-		// usleep(400);
+		}
+		else if (getimes() >= philo->last_eat + philo->data->time_to_die && philo->last_eat != 0)
+		{
+			printf("----CA RENTRE----\n");
+			break;
+		}
+		// usleep(150000);
+		printf("[%d] : pense...\n", philo->id);
+		eating(philo);
+		sleeping(philo);
 	}
-    pthread_exit(NULL);
+	pthread_exit(NULL);
 }
 
-void	*func2(void *arg)
-{
-	int philo = *(int *)arg;
-	printf("philo [%d]", philo);
-}
-
-// void	*func3(void *arg)
-// {
-// 	t_data data = *(t_data*)arg;
-// 	printf("philo [%d]\n", data.philo[data.index_philo].id);
-// }
-
-// void	*func4(void *arg)
-// {
-// 	static int i = 1;
-// 	t_data data = *(t_data*)arg;
-// 	printf("philo [%d]\n", i);
-// 	i++;
-// }
-
-t_data	*init_data(t_data *data, char **av)
+t_data *init_data(t_data *data, char **av, int start)
 {
 	data = malloc(sizeof(t_data));
-	data->start_time = getimes();
+	data->start_of_program = start;
 	data->number_of_philosophers = atl(av[1]);
 	data->time_to_die = atl(av[2]);
 	data->time_to_eat = atl(av[3]);
@@ -120,52 +116,50 @@ void print_msg(t_data *data, char *msg)
 	}
 }
 
-
 int main(int ac, char **av)
 {
 
+	long long start_of_program = getimes();
 	t_philo *philo;
-	int i = -1;
+	int i;
 	int ms = 0;
-	
-	philo = malloc(sizeof(t_philo) * atl(av[1]));
-	if (!philo)
-		return (-1);
 
-	// printf("%lld\n", data.start_time);
-	// printf("%lld\n", data.start_time + data.time_to_die);
-	pthread_mutex_init(&mutex, NULL);
 	if (ac != 5)
 	{
 		printf("needs 4 args\n");
 		return (-1);
 	}
-	while(++i < atl(av[1]))
+
+	philo = malloc(sizeof(t_philo) * atl(av[1]));
+	if (!philo)
+		return (-1);
+	// pthread_mutex_init(&mutex, NULL);
+	i = -1;
+	while (++i < atl(av[1]))
 	{
 		philo[i].id = i + 1;
-		printf("%d\n", philo[i].id);
 		philo[i].last_eat = 0;
-		philo[i].data = init_data(philo[i].data, av);
+		philo[i].born_time = getimes();
+		philo[i].data = init_data(philo[i].data, av, start_of_program);
 
 		if (pthread_create(&philo[i].philo_thread, NULL, func1, &philo[i]) != 0)
 		{
 			printf("thread_create() error\n");
 			return (-1);
 		}
-		printf("Philo %d is alive at [%lld]\n", philo[i].id, getimes());
-
+		printf("Philo %d is alive at [time = %lli]\n", philo[i].id, philo[i].born_time);
 	}
-	return 0;
-	// on creer 2 loops car avant de terminer les threads avec join, 
+	
+	// on creer 2 loops car avant de terminer les threads avec join,
 	// on attends qu'ils soient tous crees
-	// i = -1;
-	// while(++i < data.number_of_philosophers)
-	// {
-	// 	// similaire a wait() pour les processes, 
-	// 	// attend que le thread termine avant de continuer le programme
-	// 	pthread_join(data.philo[i].philo_thread, NULL);
-	// 	printf("Philo %d died at [%lld]\n", data.philo[i].id, getimes());
-	// }
+	i = -1;
+	while(++i <  philo[0].data->number_of_philosophers)
+	{
+		// similaire a wait() pour les processes,
+		// attend que le thread termine avant de continuer le programme
+		pthread_join(philo[i].philo_thread, NULL);
+		printf("Philo %d died at [%lli]\n", philo[i].id, getimes());
+	}
 
 	// // while (1)
 	// // {
