@@ -6,7 +6,7 @@
 /*   By: v3r <v3r@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:42:13 by ubuntu            #+#    #+#             */
-/*   Updated: 2022/03/06 22:04:33 by v3r              ###   ########.fr       */
+/*   Updated: 2022/03/06 22:12:24 by v3r              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	eating(t_philo *philo)
 {
 	// pthread_mutex_lock(&mutex);
 	printf("\033[1;92m%lli %d is eating\n\033[0m", getimes() - philo->born_time, philo->id);
-	usleep(philo->data->time_to_eat * 1000);
 	philo->last_eat = getimes();
+	usleep(philo->data->time_to_eat * 1000);
 	// printf("\033[1;92m%lli %d is eating\n\033[0m", philo->id, philo->last_eat);
 	// pthread_mutex_unlock(&mutex);
 
@@ -46,16 +46,15 @@ void *func1(void *arg)
 			printf("----CA RENTRE----\n");
 			break;
 		}
-		else if (getimes() >= philo->last_eat + philo->data->time_to_die && philo->last_eat != 0)
+		else if (getimes() >= philo->last_eat + philo->data->time_to_die && philo->last_eat > 0)
 		{
 			printf("----CA RENTRE----\n");
 			break;
 		}
-		// usleep(150000);
 		printf("%lld %d is thinking\n", getimes() - philo->born_time, philo->id);
-		pthread_mutex_lock(&philo->data->mutex);
+		// pthread_mutex_lock(&philo->data->mutex);
 		eating(philo);
-		pthread_mutex_unlock(&philo->data->mutex);
+		// pthread_mutex_unlock(&philo->data->mutex);
 		sleeping(philo);
 	}
 	pthread_exit(NULL);
@@ -97,6 +96,7 @@ int main(int ac, char **av)
 	// init_forks(philo[i]);
 	while (++i < atl(av[1]))
 	{
+		philo[i].born_time = getimes();
 		philo[i].l_fork = i + 1;
 		philo[i].r_fork = i;
 		if (i + 1 == atl(av[1]))
@@ -105,8 +105,7 @@ int main(int ac, char **av)
 		philo[i].id = i + 1;
 		philo[i].last_eat = 0;
 		philo[i].data = data;
-		pthread_mutex_init(&philo[i].data->mutex, NULL);
-		philo[i].born_time = getimes();
+		// pthread_mutex_init(&philo[i].data->mutex, NULL);
 
 		if (pthread_create(&philo[i].philo_thread, NULL, func1, &philo[i]) != 0)
 		{
