@@ -4,13 +4,13 @@ SRCS =	sources/main.c\
 
 OBJS		= $(SRCS:.c=.o)
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra -lpthread
+CFLAGS		= -Wall -Werror -Wextra -I include -lpthread
 NAME		= philo
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) ${CFLAGS} -o ${NAME} ${OBJS} -lpthread 
+	$(CC) ${CFLAGS} -o ${NAME} ${OBJS} 
 
 clean : 
 	rm -f $(OBJS)

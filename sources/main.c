@@ -6,7 +6,7 @@
 /*   By: v3r <v3r@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:42:13 by ubuntu            #+#    #+#             */
-/*   Updated: 2022/03/06 22:12:24 by v3r              ###   ########.fr       */
+/*   Updated: 2022/03/06 22:34:38 by v3r              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,21 @@ void *func1(void *arg)
 		if (getimes() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0)
 		{
 
-			printf("----CA RENTRE----\n");
+			printf("%lli %d died\n", getimes() - philo->born_time, philo->id);
+			exit(-1);
 			break;
 		}
 		else if (getimes() >= philo->last_eat + philo->data->time_to_die && philo->last_eat > 0)
 		{
-			printf("----CA RENTRE----\n");
+			printf("%lli %d died\n", getimes() - philo->born_time, philo->id);
+			exit(-1);
 			break;
 		}
-		printf("%lld %d is thinking\n", getimes() - philo->born_time, philo->id);
-		// pthread_mutex_lock(&philo->data->mutex);
+		pthread_mutex_lock(&philo->data->mutex);
 		eating(philo);
-		// pthread_mutex_unlock(&philo->data->mutex);
+		pthread_mutex_unlock(&philo->data->mutex);
 		sleeping(philo);
+		printf("%lld %d is thinking\n", getimes() - philo->born_time, philo->id);
 	}
 	pthread_exit(NULL);
 }
@@ -123,7 +125,8 @@ int main(int ac, char **av)
 		// similaire a wait() pour les processes,
 		// attend que le thread termine avant de continuer le programme
 		pthread_join(philo[i].philo_thread, NULL);
-		printf("%lli %d  id dead\n", getimes(), philo[i].id);
+		printf("%lli EXIT", getimes() - philo[i].born_time);
+		// exit(-1);
 	}
 
 	// pthread_mutex_destroy(&mutex);
