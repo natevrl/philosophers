@@ -5,12 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: v3r <v3r@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/06 21:33:06 by v3r               #+#    #+#             */
+/*   Crt_eated: 2022/03/06 21:33:06 by v3r               #+#    #+#             */
 /*   Updated: 2022/03/06 21:48:16 by v3r              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
+
+int ft_strlen(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 void print_msg(t_data *data, char *msg)
 {
@@ -46,7 +56,7 @@ long long atl(char *nptr)
 	return (result);
 }
 
-long long	getimes(void)
+long long	get_actual_time(void)
 {
 	struct timeval	t;
 
