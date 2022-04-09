@@ -12,24 +12,20 @@
 
 #include "../philo.h"
 
-// FAIRE LE PARSING (int overflow etc..)
-// GERER LES DATAS RACE
-// PROTEGER TOUT LES APPELS SYSTEMES
-// KILL_ALL (mutex, threads, malloc...)
-
 int main(int ac, char **av)
 {
-
 	long long start_of_program = get_actual_time();
 	t_data *data;
-	
+	t_philo *philo;
+
 	if (!error_handling(ac, av))
 		return (-1);
 	data = init_data(av, start_of_program);
 	if (!init_mutex(data))
 		return (-1);
-	init_philo(data);
-	
-	// pthread_mutex_destroy(&mutex);
+	philo = init_philo(data);
+	data->philos = philo;
+	threads_handler(philo);
+	kill_all(philo);
 	return (0);
 }

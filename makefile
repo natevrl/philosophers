@@ -6,7 +6,7 @@ SRCS =	sources/main.c\
 
 OBJS		= $(SRCS:.c=.o)
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra 
+CFLAGS		= -Wall -Werror -Wextra -g
 TFLAGS		= -lpthread
 INCLUDE		= ./include
 NAME		= philo
