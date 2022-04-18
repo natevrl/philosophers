@@ -25,7 +25,6 @@ int main(int ac, char **av)
 		return (-1);
 	philo = init_philo(data);
 	data->philos = philo;
-	// printf("test\n");
 	threads_handler(philo);
 	kill_all(philo);
 	return (0);

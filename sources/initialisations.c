@@ -56,6 +56,10 @@ t_philo  *init_philo(t_data *data)
 		philo[i].id = i + 1;
 		philo[i].last_eat = 0;
 		philo[i].data = data;
+		if (data->max_eat == -1)
+			philo[i].number_of_eat = -2;
+		else
+			philo[i].number_of_eat = 0;
 	}
 	return (philo);
 }
@@ -89,6 +93,7 @@ void	kill_all(t_philo *philo)
 {
 	while (--philo->data->number_of_philosophers)
 		pthread_mutex_destroy(&philo->data->forks[philo->data->number_of_philosophers]);
+	pthread_mutex_destroy(&philo->data->m_prints);
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);
