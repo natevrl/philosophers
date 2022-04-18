@@ -84,7 +84,7 @@ void	*threads_act(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 != 0)
-		usleep(2000);
+		usleep(200000);
 	while (!stop_conditions(philo))
 	{
 		grab_forks_n_eat(philo);
