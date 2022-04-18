@@ -12,6 +12,7 @@ t_data *init_data(char **av, int start)
 	data->time_to_die = atl(av[2]);
 	data->time_to_eat = atl(av[3]);
 	data->time_to_sleep = atl(av[4]);
+	data->one_is_dead = 0;
 	if (av[5])
 		data->max_eat = atl(av[5]);
 	else
@@ -31,6 +32,7 @@ int 	init_mutex(t_data *data)
 		return (printf("malloc() error\n"), 0);
 	while (nbofphilo--)
 		pthread_mutex_init(&data->forks[nbofphilo], NULL);
+	pthread_mutex_init(&data->m_prints, NULL);
 	return (1);
 }
 
@@ -66,8 +68,12 @@ int threads_handler(t_philo *philo)
 	while (++i < philo->data->number_of_philosophers)
 	{
 		if (pthread_create(&philo[i].philo_thread, NULL, threads_actions, &philo[i]) != 0)
+		{
+			kill_all(philo);
 			return (printf("pthread_create() error\n"), 0);
+		}
 	}
+	// kill_all(philo);
 	// on creer 2 loops car avant de terminer les threads avec join,
 	// on attends qu'ils soient tous crees
 	// pthread_join = similaire a wait() pour les processes,
@@ -86,5 +92,4 @@ void	kill_all(t_philo *philo)
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);
-	exit(-1);
 }

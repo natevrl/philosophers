@@ -28,7 +28,9 @@ typedef struct s_data
 	int time_to_sleep;
 	int max_eat;
 	int start_of_program;
+	int one_is_dead;
 	pthread_mutex_t *forks;
+	pthread_mutex_t m_prints;
 	t_philo *philos;
 
 } t_data;
@@ -41,9 +43,9 @@ void	ft_usleep(int ms);
 
 // actions
 void	*threads_actions(void *arg);
-void	t_grab_forks(t_philo *philo);
+void	grab_forks_n_eat(t_philo *philo);
 void	t_eat(t_philo *philo);
-void	t_sleep(t_philo *philo);
+void	sleep_and_think(t_philo *philo);
 
 // init & destory
 t_data	*init_data(char **av, int start);
