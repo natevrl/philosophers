@@ -22,15 +22,15 @@ int ft_strlen(char *str)
 	return (i);
 }
 
-void print_msg(t_data *data, char *msg)
-{
-	int i = 0;
-	while (i < data->number_of_philosophers)
-	{
-		printf("philo[%d] %s\n", i, msg);
-		i++;
-	}
-}
+// void print_msg(t_data *data, char *msg)
+// {
+// 	int i = 0;
+// 	while (i < data->number_of_philosophers)
+// 	{
+// 		printf("philo[%d] %s\n", i, msg);
+// 		i++;
+// 	}
+// }
 
 long long atl(char *nptr)
 {

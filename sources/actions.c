@@ -1,5 +1,31 @@
 #include "../philo.h"
 
+int stop_conditions(t_philo *philo)
+{
+	if (philo->data->max_eat > 0)
+	{
+		printf("philo %d a eat : [%d] times\n", philo->id, philo->number_of_eat);
+		if ( (get_actual_time() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0)
+			|| (get_actual_time() >= philo->last_eat + philo->data->time_to_die 
+				&& philo->last_eat > 0) || (philo->number_of_eat > philo->data->max_eat) )
+				return (1);
+	}
+	else
+	{
+		// printf("CARENTR\n");
+		if ((get_actual_time() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0) 
+			|| (get_actual_time() >= philo->last_eat + philo->data->time_to_die && philo->last_eat > 0))
+			return (1);
+	}
+	return (0);
+}
+
+// void    print_msg(char *str, t_philo *philo)
+// {
+//         if (!stop_conditions(philo))
+//                 printf("%lld %d %s\n", get_actual_time() - philo->born_time, philo->id, str);
+// }
+
 void	t_grab_forks(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
@@ -10,6 +36,7 @@ void	t_grab_forks(t_philo *philo)
 
 void	t_eat(t_philo *philo)
 {
+	// print_msg("is eating", philo);
 	printf("%lld %d is eating\n", get_actual_time() - philo->born_time, philo->id);
 	philo->number_of_eat++;
 	philo->last_eat = get_actual_time();
@@ -24,25 +51,9 @@ void	t_sleep(t_philo *philo)
 	usleep(philo->data->time_to_sleep * 1000);
 }
 
-int stop_conditions(t_philo *philo)
-{
-	if (philo->data->max_eat > 0)
-	{
-		printf("philo %d a eat : [%d] times\n", philo->id, philo->number_of_eat);
-		if ( (get_actual_time() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0)
-			|| (get_actual_time() >= philo->last_eat + philo->data->time_to_die 
-				&& philo->last_eat > 0) || (philo->number_of_eat > philo->data->max_eat) )
-				return (1);
-	}
-	else
-	{
-		printf("CARENTR\n");
-		if ((get_actual_time() >= philo->born_time + philo->data->time_to_die && philo->last_eat == 0) 
-			|| (get_actual_time() >= philo->last_eat + philo->data->time_to_die && philo->last_eat > 0))
-			return (1);
-	}
-	return (0);
-}
+
+
+
 void *threads_actions(void *arg)
 {
 	t_philo *philo; 
@@ -59,3 +70,4 @@ void *threads_actions(void *arg)
 	kill_all(philo->data->philos);
 	pthread_exit(NULL);
 }
+
