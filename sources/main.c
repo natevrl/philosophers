@@ -16,17 +16,16 @@ int	main(int ac, char **av)
 {
 	long long	start_of_program;
 	t_data		*data;
-	t_philo		*philo;
+	// t_philo		*philo;
 
 	start_of_program = get_actual_time();
-	if (!error_handling(ac, av))
+	if (!error_handling(ac, av) || !start_of_program)
 		return (-1);
 	data = init_data(av, start_of_program);
-	if (!init_mutex(data))
-		return (-1);
-	philo = init_philo(data);
-	data->philos = philo;
-	threads_handler(philo);
-	kill_all(philo);
+	data->philos = init_philo(data);
+	if (!init_mutex(data) || !data->philos || !data)
+		return (kill_all(data->philos), -1);
+	threads_handler(data->philos);
+	kill_all(data->philos);
 	return (0);
 }

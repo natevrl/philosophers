@@ -96,7 +96,13 @@ int	threads_handler(t_philo *philo)
 	}
 	i = -1;
 	while (++i < philo->data->nbof_philos)
-		pthread_join(philo[i].philo_thread, NULL);
+	{
+		if (pthread_join(philo[i].philo_thread, NULL) != 0)
+		{
+			kill_all(philo);
+			return (printf("pthread_join() error\n"), 0);
+		}
+	}
 	return (1);
 }
 
