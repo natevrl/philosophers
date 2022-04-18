@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: v3r <v3r@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Crt_eated: 2022/03/06 21:33:06 by v3r               #+#    #+#             */
-/*   Updated: 2022/03/06 21:48:16 by v3r              ###   ########.fr       */
+/*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
+/*   Updated: 2022/04/18 21:50:19 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -22,21 +22,11 @@ int ft_strlen(char *str)
 	return (i);
 }
 
-// void print_msg(t_data *data, char *msg)
-// {
-// 	int i = 0;
-// 	while (i < data->number_of_philosophers)
-// 	{
-// 		printf("philo[%d] %s\n", i, msg);
-// 		i++;
-// 	}
-// }
-
-long long atl(char *nptr)
+long long	atl(char *nptr)
 {
-	int i;
-	int negatif;
-	long long result;
+	int			i;
+	int			negatif;
+	long long	result;
 
 	i = 0;
 	result = 0;
