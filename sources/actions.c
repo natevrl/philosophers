@@ -25,12 +25,12 @@ void	print_msg(char *str, t_philo *philo)
 
 int	stop_conditions(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->m_death);
+	// pthread_mutex_lock(&philo->data->m_death);
 	if (philo->data->one_death == 1)
 		return (1);
+	// pthread_mutex_unlock(&philo->data->m_death);
 	if (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat)
 		return (1);
-	pthread_mutex_unlock(&philo->data->m_death);
 	if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->m_prints);
@@ -79,7 +79,7 @@ void	*threads_act(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (!philo->r_fork)
+	if (philo->r_fork == -1)
 	{
 		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
 		print_msg("has taken a fork", philo);

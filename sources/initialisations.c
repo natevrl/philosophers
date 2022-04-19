@@ -66,6 +66,10 @@ t_philo	*init_philo(t_data *data)
 		philo[i].born_time = get_actual_time();
 		philo[i].l_fork = i + 1;
 		philo[i].r_fork = i;
+		if (data->nbof_philos != 1)
+			philo[i].r_fork = i;
+		else
+			philo[i].r_fork = -1;
 		if (i + 1 == data->nbof_philos)
 			philo[i].l_fork = 0;
 		philo[i].id = i + 1;
