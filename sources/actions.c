@@ -24,9 +24,7 @@ int	stop_conditions(t_philo *philo)
 	if (philo->data->one_death == 1)
 		return (1);
 	if (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat)
-	{
 		return (1);
-	}
 	if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->m_prints);
@@ -83,6 +81,17 @@ void	*threads_act(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (!philo->r_fork)
+	{
+		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
+		pthread_mutex_lock(&philo->data->m_prints);
+		print_msg("has taken a fork", philo);
+		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
+		pthread_mutex_unlock(&philo->data->m_prints);
+        while (1)
+			if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
+					return (print_msg("died", philo), NULL);
+	}
 	if (philo->id % 2 != 0)
 		usleep(200000);
 	while (!stop_conditions(philo))
