@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:42:02 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 19:13:01 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 23:05:35 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ t_philo	*init_philo(t_data *data)
 		philo[i].born_time = get_actual_time();
 		philo[i].l_fork = i + 1;
 		philo[i].r_fork = i;
-		// if (data->nbof_philos != 1)
-		// 	philo[i].r_fork = i;
-		// else
-		// 	philo[i].r_fork = -1;
+		if (data->nbof_philos != 1)
+			philo[i].r_fork = i;
+		else
+			philo[i].r_fork = -1;
 		if (i + 1 == data->nbof_philos)
 			philo[i].l_fork = 0;
 		philo[i].id = i + 1;
@@ -102,7 +102,7 @@ int	threads_handler(t_philo *philo)
 	i = -1;
 	while (++i < philo->data->nbof_philos)
 	{
-		if (pthread_join(philo[i].philo_thread, NULL) != 0)
+		if (pthread_join(philo[0].philo_thread, NULL) != 0)
 		{
 			kill_all(philo);
 			return (printf("pthread_join() error\n"), 0);
