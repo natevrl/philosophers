@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:42:02 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/18 22:01:07 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 19:08:56 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,10 @@ int	init_mutex(t_data *data)
 	if (!data->forks)
 		return (printf("malloc() error\n"), 0);
 	while (nbofphilo--)
-	{
 		pthread_mutex_init(&data->forks[nbofphilo], NULL);
-	}
 	pthread_mutex_init(&data->m_prints, NULL);
 	pthread_mutex_init(&data->m_death, NULL);
+	pthread_mutex_init(&data->m_eat, NULL);
 	return (1);
 }
 
@@ -66,10 +65,10 @@ t_philo	*init_philo(t_data *data)
 		philo[i].born_time = get_actual_time();
 		philo[i].l_fork = i + 1;
 		philo[i].r_fork = i;
-		if (data->nbof_philos != 1)
-			philo[i].r_fork = i;
-		else
-			philo[i].r_fork = -1;
+		// if (data->nbof_philos != 1)
+		// 	philo[i].r_fork = i;
+		// else
+		// 	philo[i].r_fork = -1;
 		if (i + 1 == data->nbof_philos)
 			philo[i].l_fork = 0;
 		philo[i].id = i + 1;
@@ -119,6 +118,7 @@ void	kill_all(t_philo *philo)
 		pthread_mutex_destroy(&philo->data->forks[philo->data->nbof_philos]);
 	pthread_mutex_destroy(&philo->data->m_prints);
 	pthread_mutex_destroy(&philo->data->m_death);
+	pthread_mutex_destroy(&philo->data->m_eat);
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);

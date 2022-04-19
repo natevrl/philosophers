@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:41:39 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/18 22:01:43 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 19:08:35 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_data
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		m_prints;
 	pthread_mutex_t		m_death;
+	pthread_mutex_t		m_eat;
 	t_philo				*philos;
 
 }	t_data;
@@ -52,7 +53,8 @@ typedef struct s_data
 long long	atl(char *nptr);
 long long	get_actual_time(void);
 int			ft_strlen(char *str);
-void		ft_usleep(int ms);
+void	print_msg(char *str, t_philo *philo);
+
 
 // actions
 void		*threads_act(void *arg);
@@ -63,7 +65,6 @@ void		sleep_and_think(t_philo *philo);
 // init & destory
 t_data		*init_data(char **av, int start);
 int			init_mutex(t_data *data);
-// int 	init_philo(t_data *data);
 t_philo		*init_philo(t_data *data);
 int			threads_handler(t_philo *philo);
 void		kill_all(t_philo *philo);

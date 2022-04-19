@@ -6,11 +6,13 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/18 21:50:19 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 18:59:13 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+
 
 int	ft_strlen(char *str)
 {
