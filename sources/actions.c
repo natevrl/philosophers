@@ -15,16 +15,22 @@
 void	print_msg(char *str, t_philo *philo)
 {
 	if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
+	{
+		pthread_mutex_lock(&philo->data->m_prints);
 		printf("%lld %d %s\n", get_actual_time() - philo->born_time, \
 		philo->id, str);
+		pthread_mutex_unlock(&philo->data->m_prints);
+	}
 }
 
 int	stop_conditions(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->data->m_death);
 	if (philo->data->one_death == 1)
 		return (1);
 	if (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat)
 		return (1);
+	pthread_mutex_unlock(&philo->data->m_death);
 	if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->m_prints);
@@ -42,13 +48,9 @@ void	grab_forks_n_eat(t_philo *philo)
 	if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
 	{
 		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
-		pthread_mutex_lock(&philo->data->m_prints);
 		print_msg("has taken a fork", philo);
-		pthread_mutex_unlock(&philo->data->m_prints);
 		pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
-		pthread_mutex_lock(&philo->data->m_prints);
 		print_msg("has taken a fork", philo);
-		pthread_mutex_unlock(&philo->data->m_prints);
 		print_msg("is eating", philo);
 		if (philo->data->max_eat != -1)
 		{
@@ -66,13 +68,9 @@ void	sleep_and_think(t_philo *philo)
 {
 	if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
 	{
-		pthread_mutex_lock(&philo->data->m_prints);
 		print_msg("is sleeping", philo);
-		pthread_mutex_unlock(&philo->data->m_prints);
 		usleep(philo->data->time_to_sleep * 1000);
-		pthread_mutex_lock(&philo->data->m_prints);
 		print_msg("is thinking", philo);
-		pthread_mutex_unlock(&philo->data->m_prints);
 	}
 }
 
@@ -84,10 +82,8 @@ void	*threads_act(void *arg)
 	if (!philo->r_fork)
 	{
 		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
-		pthread_mutex_lock(&philo->data->m_prints);
 		print_msg("has taken a fork", philo);
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
-		pthread_mutex_unlock(&philo->data->m_prints);
         while (1)
 			if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
 					return (print_msg("died", philo), NULL);

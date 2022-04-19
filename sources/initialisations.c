@@ -43,8 +43,11 @@ int	init_mutex(t_data *data)
 	if (!data->forks)
 		return (printf("malloc() error\n"), 0);
 	while (nbofphilo--)
+	{
 		pthread_mutex_init(&data->forks[nbofphilo], NULL);
+	}
 	pthread_mutex_init(&data->m_prints, NULL);
+	pthread_mutex_init(&data->m_death, NULL);
 	return (1);
 }
 
@@ -111,6 +114,7 @@ void	kill_all(t_philo *philo)
 	while (--philo->data->nbof_philos)
 		pthread_mutex_destroy(&philo->data->forks[philo->data->nbof_philos]);
 	pthread_mutex_destroy(&philo->data->m_prints);
+	pthread_mutex_destroy(&philo->data->m_death);
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);
