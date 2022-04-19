@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:50:30 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 19:10:27 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 19:12:54 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	grab_forks_n_eat(t_philo *philo)
 		print_msg("has taken a fork", philo);
 		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
 		print_msg("has taken a fork", philo);
-		pthread_mutex_lock(&philo->data->m_eat);
 		print_msg("is eating", philo);
 		if (philo->data->max_eat != -1)
 		{
@@ -68,7 +67,6 @@ void	grab_forks_n_eat(t_philo *philo)
 			printf("philo %d a eat : [%d] times\n", philo->id, philo->nbof_eat);
 		}
 		philo->last_eat = get_actual_time();
-		pthread_mutex_unlock(&philo->data->m_eat);
 		usleep(philo->data->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
 		pthread_mutex_unlock(&philo->data->forks[philo->r_fork]);

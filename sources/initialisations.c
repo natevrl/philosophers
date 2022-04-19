@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:42:02 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 19:08:56 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 19:13:01 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	init_mutex(t_data *data)
 		pthread_mutex_init(&data->forks[nbofphilo], NULL);
 	pthread_mutex_init(&data->m_prints, NULL);
 	pthread_mutex_init(&data->m_death, NULL);
-	pthread_mutex_init(&data->m_eat, NULL);
 	return (1);
 }
 
@@ -118,7 +117,6 @@ void	kill_all(t_philo *philo)
 		pthread_mutex_destroy(&philo->data->forks[philo->data->nbof_philos]);
 	pthread_mutex_destroy(&philo->data->m_prints);
 	pthread_mutex_destroy(&philo->data->m_death);
-	pthread_mutex_destroy(&philo->data->m_eat);
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);

@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:41:39 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 19:08:35 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/19 19:12:46 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct s_data
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		m_prints;
 	pthread_mutex_t		m_death;
-	pthread_mutex_t		m_eat;
 	t_philo				*philos;
 
 }	t_data;
