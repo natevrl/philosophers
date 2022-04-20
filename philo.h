@@ -23,7 +23,6 @@ typedef struct s_philo
 {
 	int				id;
 	long long		last_eat;
-	long long		born_time;
 	int				l_fork;
 	int				r_fork;
 	int				nbof_eat;
@@ -39,7 +38,7 @@ typedef struct s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_eat;
-	int					start_of_program;
+	long long			start_of_program;
 	int					one_death;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		m_prints;
@@ -62,7 +61,7 @@ void		t_eat(t_philo *philo);
 void		sleep_and_think(t_philo *philo);
 
 // init & destory
-t_data		*init_data(char **av, int start);
+t_data	*init_data(char **av, long long start);
 int			init_mutex(t_data *data);
 t_philo		*init_philo(t_data *data);
 int			threads_handler(t_philo *philo);

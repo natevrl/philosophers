@@ -12,7 +12,7 @@
 
 #include "../philo.h"
 
-t_data	*init_data(char **av, int start)
+t_data	*init_data(char **av, long long start)
 {
 	t_data	*data;
 
@@ -61,7 +61,6 @@ t_philo	*init_philo(t_data *data)
 	while (++i < data->nbof_philos)
 	{
 		philo[i].data = data;
-		philo[i].born_time = get_actual_time();
 		philo[i].l_fork = i + 1;
 		philo[i].r_fork = i;
 		if (data->nbof_philos != 1)
@@ -71,8 +70,6 @@ t_philo	*init_philo(t_data *data)
 		if (i + 1 == data->nbof_philos)
 			philo[i].l_fork = 0;
 		philo[i].id = i + 1;
-		philo[i].last_eat = philo[i].born_time;
-		philo[i].data = data;
 		if (data->max_eat == -1)
 			philo[i].nbof_eat = -2;
 		else
@@ -92,6 +89,7 @@ int	threads_handler(t_philo *philo)
 	i = -1;
 	while (++i < philo->data->nbof_philos)
 	{
+		philo[i].last_eat = get_actual_time();
 		if (pthread_create(&philo[i].philo_thread, NULL, threads_act, \
 		&philo[i]) != 0)
 		{
@@ -102,7 +100,7 @@ int	threads_handler(t_philo *philo)
 	i = -1;
 	while (++i < philo->data->nbof_philos)
 	{
-		if (pthread_join(philo[0].philo_thread, NULL) != 0)
+		if (pthread_join(philo[i].philo_thread, NULL) != 0)
 		{
 			kill_all(philo);
 			return (printf("pthread_join() error\n"), 0);

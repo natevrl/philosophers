@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	// t_philo		*philo;
 
 	start_of_program = get_actual_time();
-	if (!error_handling(ac, av) || !start_of_program)
+	if (!error_handling(ac, av))
 		return (-1);
 	data = init_data(av, start_of_program);
 	data->philos = init_philo(data);

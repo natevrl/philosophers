@@ -23,23 +23,23 @@ int     not_dead(t_data *data)
 void	print_msg(char *str, t_philo *philo)
 {
 	// if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
+	pthread_mutex_lock(&philo->data->m_prints);
 	if (not_dead(philo->data))
 	{
-		pthread_mutex_lock(&philo->data->m_prints);
-		printf("%lld %d %s\n", get_actual_time() - philo->born_time, \
+		printf("%lld %d %s\n", get_actual_time() - philo->data->start_of_program, \
 		philo->id, str);
-		pthread_mutex_unlock(&philo->data->m_prints);
 	}
+	pthread_mutex_unlock(&philo->data->m_prints);
 }
 
 int	stop_conditions(t_philo *philo)
 {
-	if ((philo->data->one_death == 1)|| (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat))
+	if ((philo->data->one_death == 1) || (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat))
 		return (1);
-	if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
+	if (get_actual_time() > philo->last_eat + philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->m_prints);
-		printf("%lld %d died\n", get_actual_time() - philo->born_time, \
+		printf("%lld %d died\n", get_actual_time() - philo->data->start_of_program, \
 		philo->id);
 		pthread_mutex_unlock(&philo->data->m_prints);
         pthread_mutex_lock(&philo->data->m_death);
@@ -63,6 +63,7 @@ void	grab_forks_n_eat(t_philo *philo)
 			pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
 		else
 			pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
+	printf("philo[%d] = %lld\n", philo->id, get_actual_time() - (philo->last_eat + philo->data->time_to_die));
 		print_msg("has taken a fork", philo);
 		print_msg("is eating", philo);
 		if (philo->data->max_eat != -1)
