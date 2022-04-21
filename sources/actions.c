@@ -50,6 +50,8 @@ int	stop_conditions(t_philo *philo)
 	return (0);
 }
 
+
+
 void	grab_forks_n_eat(t_philo *philo)
 {
 	if (not_dead(philo->data))
@@ -63,16 +65,18 @@ void	grab_forks_n_eat(t_philo *philo)
 			pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
 		else
 			pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
-	printf("philo[%d] = %lld\n", philo->id, get_actual_time() - (philo->last_eat + philo->data->time_to_die));
 		print_msg("has taken a fork", philo);
-		print_msg("is eating", philo);
-		if (philo->data->max_eat != -1)
+		if (!stop_conditions(philo))
 		{
-			philo->nbof_eat++;
-			printf("philo %d a eat : [%d] times\n", philo->id, philo->nbof_eat);
+			print_msg("is eating", philo);
+			if (philo->data->max_eat != -1)
+			{
+				philo->nbof_eat++;
+				printf("philo %d a eat : [%d] times\n", philo->id, philo->nbof_eat);
+			}
+			philo->last_eat = get_actual_time();
+			usleep(philo->data->time_to_eat * 1000);
 		}
-		philo->last_eat = get_actual_time();
-		usleep(philo->data->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
 		pthread_mutex_unlock(&philo->data->forks[philo->r_fork]);
 	}

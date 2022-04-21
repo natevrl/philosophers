@@ -16,7 +16,7 @@ int	main(int ac, char **av)
 {
 	long long	start_of_program;
 	t_data		*data;
-	//test
+
 	start_of_program = get_actual_time();
 	if (!error_handling(ac, av))
 		return (-1);

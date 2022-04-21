@@ -46,6 +46,7 @@ int	init_mutex(t_data *data)
 		pthread_mutex_init(&data->forks[nbofphilo], NULL);
 	pthread_mutex_init(&data->m_prints, NULL);
 	pthread_mutex_init(&data->m_death, NULL);
+	pthread_mutex_init(&data->m_eat, NULL);
 	return (1);
 }
 
@@ -115,6 +116,7 @@ void	kill_all(t_philo *philo)
 		pthread_mutex_destroy(&philo->data->forks[philo->data->nbof_philos]);
 	pthread_mutex_destroy(&philo->data->m_prints);
 	pthread_mutex_destroy(&philo->data->m_death);
+	pthread_mutex_destroy(&philo->data->m_eat);
 	free(philo->data->forks);
 	free(philo->data);
 	free(philo);
