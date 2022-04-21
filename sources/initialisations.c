@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:42:02 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 23:05:35 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:44:28 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	threads_handler(t_philo *philo)
 	i = -1;
 	while (++i < philo->data->nbof_philos)
 	{
-		philo[i].last_eat = get_actual_time();
+		philo[i].last_eat = current_time();
 		if (pthread_create(&philo[i].philo_thread, NULL, threads_act, \
 		&philo[i]) != 0)
 		{

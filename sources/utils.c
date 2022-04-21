@@ -6,13 +6,23 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 18:59:13 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:46:01 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-
+// if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
+void	print_msg(char *str, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->m_prints);
+	if (not_dead(philo->data))
+	{
+		printf("%lld %d %s\n", current_time() - philo->data->start_of_program, \
+		philo->id, str);
+	}
+	pthread_mutex_unlock(&philo->data->m_prints);
+}
 
 int	ft_strlen(char *str)
 {
@@ -48,7 +58,7 @@ long long	atl(char *nptr)
 	return (result);
 }
 
-long long	get_actual_time(void)
+long long	current_time(void)
 {
 	struct timeval	t;
 

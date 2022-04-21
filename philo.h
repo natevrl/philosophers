@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:41:39 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 19:12:46 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:46:24 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ typedef struct s_data
 
 // utils
 long long	atl(char *nptr);
-long long	get_actual_time(void);
+long long	current_time(void);
 int			ft_strlen(char *str);
-void	print_msg(char *str, t_philo *philo);
-
+void		print_msg(char *str, t_philo *philo);
 
 // actions
 void		*threads_act(void *arg);
@@ -62,7 +61,7 @@ void		t_eat(t_philo *philo);
 void		sleep_and_think(t_philo *philo);
 
 // init & destory
-t_data	*init_data(char **av, long long start);
+t_data		*init_data(char **av, long long start);
 int			init_mutex(t_data *data);
 t_philo		*init_philo(t_data *data);
 int			threads_handler(t_philo *philo);

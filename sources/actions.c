@@ -6,51 +6,38 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:50:30 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/19 23:06:52 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:45:47 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-int     not_dead(t_data *data)
+int	not_dead(t_data *data)
 {
-        pthread_mutex_lock(&data->m_death);
-        if (data->one_death == 1)
-                return (pthread_mutex_unlock(&(data->m_death)), 0);
-        return (pthread_mutex_unlock(&data->m_death), 1);
-}
-
-void	print_msg(char *str, t_philo *philo)
-{
-	// if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
-	pthread_mutex_lock(&philo->data->m_prints);
-	if (not_dead(philo->data))
-	{
-		printf("%lld %d %s\n", get_actual_time() - philo->data->start_of_program, \
-		philo->id, str);
-	}
-	pthread_mutex_unlock(&philo->data->m_prints);
+	pthread_mutex_lock(&data->m_death);
+	if (data->one_death == 1)
+		return (pthread_mutex_unlock(&(data->m_death)), 0);
+	return (pthread_mutex_unlock(&data->m_death), 1);
 }
 
 int	stop_conditions(t_philo *philo)
 {
-	if ((philo->data->one_death == 1) || (philo->data->max_eat > 0 && philo->nbof_eat >= philo->data->max_eat))
+	if ((philo->data->one_death == 1) || (philo->data->max_eat > 0 && \
+	philo->nbof_eat >= philo->data->max_eat))
 		return (1);
-	if (get_actual_time() > philo->last_eat + philo->data->time_to_die)
+	if (current_time() > philo->last_eat + philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->m_prints);
-		printf("%lld %d died\n", get_actual_time() - philo->data->start_of_program, \
+		printf("%lld %d died\n", current_time() - philo->data->start_of_program, \
 		philo->id);
 		pthread_mutex_unlock(&philo->data->m_prints);
-        pthread_mutex_lock(&philo->data->m_death);
+		pthread_mutex_lock(&philo->data->m_death);
 		philo->data->one_death = 1;
-        pthread_mutex_unlock(&philo->data->m_death);
+		pthread_mutex_unlock(&philo->data->m_death);
 		return (1);
 	}
 	return (0);
 }
-
-
 
 void	grab_forks_n_eat(t_philo *philo)
 {
@@ -74,7 +61,7 @@ void	grab_forks_n_eat(t_philo *philo)
 				philo->nbof_eat++;
 				printf("philo %d a eat : [%d] times\n", philo->id, philo->nbof_eat);
 			}
-			philo->last_eat = get_actual_time();
+			philo->last_eat = current_time();
 			usleep(philo->data->time_to_eat * 1000);
 		}
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
@@ -103,7 +90,7 @@ void	*threads_act(void *arg)
 		print_msg("has taken a fork", philo);
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
 		while (1)
-			if (get_actual_time() >= philo->last_eat + philo->data->time_to_die)
+			if (current_time() >= philo->last_eat + philo->data->time_to_die)
 				return (print_msg("died", philo), NULL);
 	}
 	if (philo->id % 2 == 0)

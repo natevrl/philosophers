@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:48:38 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/21 20:19:01 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:44:28 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main(int ac, char **av)
 	long long	start_of_program;
 	t_data		*data;
 
-	start_of_program = get_actual_time();
+	start_of_program = current_time();
 	if (!error_handling(ac, av))
 		return (-1);
 	data = init_data(av, start_of_program);
