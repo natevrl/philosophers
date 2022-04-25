@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmv3r <vmv3r@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 18:22:55 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 23:10:53 by vmv3r            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,11 @@
 
 int	check_max_eat(t_philo *philo)
 {
-	if (philo->data->max_eat != -1)
-	{
-		philo->nbof_eat++;
-		if (philo->nbof_eat >= philo->data->max_eat)
-			return (pthread_mutex_unlock(&philo->data->forks[philo->l_fork]), \
-					pthread_mutex_unlock(&philo->data->forks[philo->r_fork]), \
-					0);
-	}
+	philo->nbof_eat++;
+	if (philo->nbof_eat >= philo->data->max_eat)
+		return (pthread_mutex_unlock(&philo->data->forks[philo->l_fork]), \
+				pthread_mutex_unlock(&philo->data->forks[philo->r_fork]), \
+				0);
 	return (1);
 }
 
@@ -33,6 +30,8 @@ void	print_msg(char *str, t_philo *philo)
 		printf("%lld %d %s\n", current_time() - philo->data->start_of_program, \
 		philo->id, str);
 	}
+	else
+		printf("cmort ----------- %s\n", str);
 	pthread_mutex_unlock(&philo->data->m_prints);
 }
 
