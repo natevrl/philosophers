@@ -6,13 +6,25 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/21 20:46:01 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:33:10 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-// if (philo->data->one_death == 0 && philo->nbof_eat <= philo->data->max_eat)
+int	check_max_eat(t_philo *philo)
+{
+	if (philo->data->max_eat != -1)
+	{
+		philo->nbof_eat++;
+		if (philo->nbof_eat >= philo->data->max_eat)
+			return (pthread_mutex_unlock(&philo->data->forks[philo->l_fork]), \
+					pthread_mutex_unlock(&philo->data->forks[philo->r_fork]), \
+					0);
+	}
+	return (1);
+}
+
 void	print_msg(char *str, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->m_prints);

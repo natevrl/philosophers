@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:50:30 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/21 20:45:47 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:41:52 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	stop_conditions(t_philo *philo)
 	return (0);
 }
 
-void	grab_forks_n_eat(t_philo *philo)
+int	grab_forks_n_eat(t_philo *philo)
 {
 	if (not_dead(philo->data))
 	{
@@ -56,17 +56,15 @@ void	grab_forks_n_eat(t_philo *philo)
 		if (!stop_conditions(philo))
 		{
 			print_msg("is eating", philo);
-			if (philo->data->max_eat != -1)
-			{
-				philo->nbof_eat++;
-				printf("philo %d a eat : [%d] times\n", philo->id, philo->nbof_eat);
-			}
+			if (!check_max_eat(philo))
+				return (0);
 			philo->last_eat = current_time();
 			usleep(philo->data->time_to_eat * 1000);
 		}
 		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
 		pthread_mutex_unlock(&philo->data->forks[philo->r_fork]);
 	}
+	return (1);
 }
 
 void	sleep_and_think(t_philo *philo)
@@ -97,8 +95,8 @@ void	*threads_act(void *arg)
 		usleep(200000);
 	while (!stop_conditions(philo))
 	{
-		grab_forks_n_eat(philo);
-		sleep_and_think(philo);
+		if (grab_forks_n_eat(philo))
+			sleep_and_think(philo);
 	}
 	return (NULL);
 }
