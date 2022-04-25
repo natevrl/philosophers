@@ -6,7 +6,7 @@
 /*   By: vmv3r <vmv3r@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 23:10:53 by vmv3r            ###   ########.fr       */
+/*   Updated: 2022/04/25 23:22:42 by vmv3r            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ void	print_msg(char *str, t_philo *philo)
 		printf("%lld %d %s\n", current_time() - philo->data->start_of_program, \
 		philo->id, str);
 	}
-	else
-		printf("cmort ----------- %s\n", str);
 	pthread_mutex_unlock(&philo->data->m_prints);
 }
 
