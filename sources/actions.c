@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:50:30 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 12:41:52 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 14:54:22 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@ int	not_dead(t_data *data)
 
 int	stop_conditions(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->data->m_death);
 	if ((philo->data->one_death == 1) || (philo->data->max_eat > 0 && \
 	philo->nbof_eat >= philo->data->max_eat))
-		return (1);
+		return (pthread_mutex_unlock(&philo->data->m_death), 1);
+	pthread_mutex_unlock(&philo->data->m_death);
 	if (current_time() > philo->last_eat + philo->data->time_to_die)
 	{
-		pthread_mutex_lock(&philo->data->m_prints);
+		// pthread_mutex_lock(&philo->data->m_eat);
 		printf("%lld %d died\n", current_time() - philo->data->start_of_program, \
 		philo->id);
-		pthread_mutex_unlock(&philo->data->m_prints);
+		// pthread_mutex_unlock(&philo->data->m_eat);
 		pthread_mutex_lock(&philo->data->m_death);
 		philo->data->one_death = 1;
 		pthread_mutex_unlock(&philo->data->m_death);
@@ -91,8 +93,8 @@ void	*threads_act(void *arg)
 			if (current_time() >= philo->last_eat + philo->data->time_to_die)
 				return (print_msg("died", philo), NULL);
 	}
-	if (philo->id % 2 == 0)
-		usleep(200000);
+	if (philo->id % 2 != 0)
+		usleep(190000);
 	while (!stop_conditions(philo))
 	{
 		if (grab_forks_n_eat(philo))

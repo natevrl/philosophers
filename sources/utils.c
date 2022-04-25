@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 12:33:10 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 14:49:18 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_max_eat(t_philo *philo)
 void	print_msg(char *str, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->m_prints);
-	if (not_dead(philo->data))
+	if (!stop_conditions(philo))
 	{
 		printf("%lld %d %s\n", current_time() - philo->data->start_of_program, \
 		philo->id, str);

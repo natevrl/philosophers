@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:59:11 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/18 22:00:35 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 14:34:42 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ int	error_handling(int ac, char **av)
 	int	i;
 
 	if (ac != 5 && ac != 6)
-		return (printf("Invalid params : ./philo [nbof_philos] \
-		[time_to_die] [time_to_eat] [time_to_sleep] [max_eat]\n"), 0);
+		return (printf("5 or 6 args needed\n"), 0);
 	while (--ac)
 	{
 		if (av[ac][0] == '\0' || av[ac][0] == '0')

@@ -6,7 +6,7 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:41:39 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 12:33:34 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/25 14:42:35 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_data
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		m_prints;
 	pthread_mutex_t		m_death;
+	pthread_mutex_t		m_eat;
 	t_philo				*philos;
 
 }	t_data;
@@ -56,6 +57,7 @@ int			check_max_eat(t_philo *philo);
 
 // actions
 int			not_dead(t_data *data);
+int	stop_conditions(t_philo *philo);
 void		*threads_act(void *arg);
 int			grab_forks_n_eat(t_philo *philo);
 void		t_eat(t_philo *philo);
