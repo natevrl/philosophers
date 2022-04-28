@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmv3r <vmv3r@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:49:33 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 23:22:42 by vmv3r            ###   ########.fr       */
+/*   Updated: 2022/04/25 18:22:55 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 int	check_max_eat(t_philo *philo)
 {
-	philo->nbof_eat++;
-	if (philo->nbof_eat >= philo->data->max_eat)
-		return (pthread_mutex_unlock(&philo->data->forks[philo->l_fork]), \
-				pthread_mutex_unlock(&philo->data->forks[philo->r_fork]), \
-				0);
+	if (philo->data->max_eat != -1)
+	{
+		philo->nbof_eat++;
+		if (philo->nbof_eat >= philo->data->max_eat)
+			return (pthread_mutex_unlock(&philo->data->forks[philo->l_fork]), \
+					pthread_mutex_unlock(&philo->data->forks[philo->r_fork]), \
+					0);
+	}
 	return (1);
 }
 

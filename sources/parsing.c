@@ -6,13 +6,14 @@
 /*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:59:11 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 14:34:42 by nbenhado         ###   ########.fr       */
+/*   Updated: 2022/04/28 13:29:56 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
 // check if : 
+// --------> Enough args
 // --------> args are valid numbers
 // --------> args are digit
 // --------> no int overflow

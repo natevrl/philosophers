@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmv3r <vmv3r@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nbenhado <nbenhado@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 21:50:30 by nbenhado          #+#    #+#             */
-/*   Updated: 2022/04/25 23:09:39 by vmv3r            ###   ########.fr       */
+/*   Updated: 2022/04/28 13:24:04 by nbenhado         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,28 @@ int	stop_conditions(t_philo *philo)
 	// pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
 int	grab_forks_n_eat(t_philo *philo)
 {
-		pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
-		print_msg("has taken a fork", philo);
-		pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
-		print_msg("has taken a fork", philo);
-		print_msg("is eating", philo);
-		if (philo->data->max_eat != -1)
-		{
-			if (!check_max_eat(philo))
-				return (0);
-		}
-		philo->last_eat = current_time();
-		usleep(philo->data->time_to_eat * 1000);
-		pthread_mutex_unlock(&philo->data->forks[philo->r_fork]);
-		pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
+	pthread_mutex_lock(&philo->data->forks[philo->r_fork]);
+	print_msg("has taken a fork", philo);
+	pthread_mutex_lock(&philo->data->forks[philo->l_fork]);
+	print_msg("has taken a fork", philo);
+	print_msg("is eating", philo);
+	if (philo->data->max_eat != -1)
+	{
+		if (!check_max_eat(philo))
+			return (0);
+	}
+	philo->last_eat = current_time();
+	usleep(philo->data->time_to_eat * 1000);
+	pthread_mutex_unlock(&philo->data->forks[philo->r_fork]);
+	pthread_mutex_unlock(&philo->data->forks[philo->l_fork]);
 	return (1);
 }
 
 void	sleep_and_think(t_philo *philo)
 {
-		print_msg("is sleeping", philo);
-		usleep(philo->data->time_to_sleep * 1000);
-		print_msg("is thinking", philo);
+	print_msg("is sleeping", philo);
+	usleep(philo->data->time_to_sleep * 1000);
+	print_msg("is thinking", philo);
 }
 
 void	*threads_act(void *arg)
@@ -94,7 +94,7 @@ void	*threads_act(void *arg)
 		if (grab_forks_n_eat(philo))
 			sleep_and_think(philo);
 		if (stop_conditions(philo))
-			break;
+			break ;
 	}
 	return (NULL);
 }
